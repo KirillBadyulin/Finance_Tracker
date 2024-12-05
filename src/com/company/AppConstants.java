@@ -30,7 +30,17 @@ public class AppConstants {
             MONTHS_DICTIONARY.put(shortMonth, MONTHS_FULL.get(i));
             i++;
         }
+        i = 0;
+        for (String fullMonth : MONTHS_FULL) {
+            MONTHS_DICTIONARY.put(fullMonth, MONTHS_SHORT.get(i));
+            i++;
+        }
+    }
 
+    public static void printDictionary() {
+        for (Map.Entry<String, String> entry : MONTHS_DICTIONARY.entrySet()) {
+            System.out.println("Key : " + entry.getKey() + ". Value : " + entry.getValue());
+        }
     }
 
     public static final Map<String, Integer> MONTH_MAP = new HashMap<>();

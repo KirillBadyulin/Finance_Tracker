@@ -23,6 +23,7 @@ public class FinanceController {
     Map<String, Map<String, Integer>> entriesByMonthCurrentYear;
     Map<String, Integer> yearlySumByCategory;
     Map<String, Integer> monthlyCategoriesValues;
+    Map<String, Button> monthsButtons;
     List<Entry> limitedEntrySelection;
 
 
@@ -47,6 +48,7 @@ public class FinanceController {
         currentMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
         currentMonthInteger = LocalDate.now().getMonthValue();
         currentYear = LocalDate.now().getYear();
+        monthsButtons = view.getMonthsButtons();//IS IT IN CORRECT TURN, AFTER CREATING THAT CHART AND SCROLLABLE METADATA?
 
 
         defaultCategories = new LinkedList<>(List.of("RESTAURANTS", "ENTERTAINMENT", "GROCERIES", "SUGARS_AND_JUNKFOOD"));
@@ -110,21 +112,19 @@ public class FinanceController {
                 view.updateMetadataGrid(monthlyCategoriesValues, null, defaultCategories, 0, thisMonthSum, MONTH_OR_PERIOD.PERIOD);
 
             }
-            //
-            //WHATS EXACTLY I NEED HERE?
-            //FOR UPDATING TABLE(in listEntries()), I WAS GETTING A List<Entry> of requested dates, FOR POPULATING THE TABLE
-            //I NEED A Map<(String) Category, Integer>
-            //I COULD USE THE SAME LIST TO PULL DATA FOR MY METADATA. listEntries() could additionally call updateMatadata()
-            //
-            //MAIN QUESTION: WHO DOES THE PROCESSING? DAO, or listEntries()
-            //
-//            view.updateMetadataGrid();
-            //3 steps:
-            //showing popup
-            //retrieving List<String>
-            //Updating metadata List
-            //4!!!. Show charts button from controller??? All buttons from controller?
         });
+
+        //INITIALIZING MONTHSBUTONS MAP<STRING,BUTTON>
+        for (Map.Entry<String, Button> entry : monthsButtons.entrySet()) {
+            String monthName = entry.getKey();
+            Button button = entry.getValue();
+
+            if (monthName.equals("YEAR")) {
+                button.setOnAction(k -> updatePieAndBarCharts(monthName));
+            } else {
+                button.setOnAction(k -> updatePieAndBarCharts(AppConstants.MONTHS_DICTIONARY.get(monthName))); // Attach listener
+            }
+        }
     }
 
     private void createEntry() {
@@ -377,21 +377,22 @@ public class FinanceController {
 
         RadioButton dateButton = new RadioButton("Date");
         dateButton.setToggleGroup(columnCategoryToggleGroup);
+        dateButton.setSelected(true);
 
         RadioButton categoryButton = new RadioButton("Category");
         categoryButton.setToggleGroup(columnCategoryToggleGroup);
 
         RadioButton noColumnButton = new RadioButton("NONE");
         noColumnButton.setToggleGroup(columnCategoryToggleGroup);
-        noColumnButton.setSelected(true);
+
 
         ToggleGroup orderToggleGroup = new ToggleGroup();
         RadioButton ascButton = new RadioButton("ASC");
         ascButton.setToggleGroup(orderToggleGroup);
-        ascButton.setSelected(true);
 
         RadioButton descButton = new RadioButton("DESC");
         descButton.setToggleGroup(orderToggleGroup);
+        descButton.setSelected(true);
 
 
         CheckComboBox<Integer> yearsCheckComboBox = new CheckComboBox();
@@ -502,7 +503,7 @@ public class FinanceController {
     private void updateTableView() {
         try {
             if (!limitedTableSelection) {
-                view.updateTableData(financeDAO.getAllItemsSorted(ColumnChoice.date, SortingOrder.ASC)); //UPDATING TABLE
+                view.updateTableData(financeDAO.getAllItemsSorted(ColumnChoice.date, SortingOrder.DESC)); //UPDATING TABLE
             } else {
                 view.updateTableData(limitedEntrySelection);
             }
@@ -520,7 +521,7 @@ public class FinanceController {
                 view.updateMetadataGrid(monthlyCategoriesValues, null, defaultCategories, 0, thisMonthSum, MONTH_OR_PERIOD.PERIOD);
             }
             //UPDATE SCROLLABLE METADATA
-            view.updateScrollableMetadata(entriesByMonthCurrentYear, financeDAO.getSumForYearPerMonth(LocalDate.now().getYear()));
+            view.updateScrollableMetadata(entriesByMonthCurrentYear, financeDAO.getSumForYearPerMonth(LocalDate.now().getYear()), yearlySumByCategory);
             //UPDATE PIE CHART
             view.updatePieChart(monthlyCategoriesValues);
             //UPDATE BAR CHART
@@ -564,14 +565,17 @@ public class FinanceController {
         }
     }
 
-    //MY GOAL NOW IS: WHILE BEING IN THE selectedState
-    //FOR CREATE, UPDATE AND DELETE METHODS
-    //TO UPDATE THE TABLE WITH A (LIMITED, MODIFIED) LIST<ENTRIES>
-
-    //I HAVE TWO WAYS ABOUT IT:
-    //1.TO HAVE A CLASS-BOUND LIST<ENTRIES>, WHEN I CREATE, UPDATE OR DELETE, I WOULD ADD OR SUBSTRACT FROM THAT LIST
-    //DIFFICULTY: LIST IS NOT GONNA BE SORTED. REMOVING WORKS, UPDATING/ADDING THOUGH???
-    //2. HAVE TO RETRIEVE UPDATED DATA FROM THE DATABASE *AGAIN*, FOR EACH CREATE/DELETE/UPDATE
-    //DIFFICULTY: STORING PREVIOUS CHOICE OF MONTH AND YEAR.
-    //TWO INT VARIABLES? A LIST WITH TWO VALUES?
+    public void updatePieAndBarCharts(String monthName) {
+        if (monthName.equals("YEAR")) {
+            view.updatePieChart(yearlySumByCategory);
+            view.updateBarChart(yearlySumByCategory);
+            view.setPieAndBarDateText("Yearly: " + LocalDate.now().getYear());
+        } else {
+            view.updatePieChart(entriesByMonthCurrentYear.get(monthName));
+            view.updateBarChart(entriesByMonthCurrentYear.get(monthName));
+            String fullMonthName = AppConstants.MONTHS_DICTIONARY.get(monthName);
+            String formattedString = fullMonthName.charAt(0) + fullMonthName.substring(1).toLowerCase();
+            view.setPieAndBarDateText( formattedString + " " + LocalDate.now().getYear());
+        }
+    }
 }
