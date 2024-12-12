@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
@@ -365,8 +366,8 @@ public class FinanceController {
         Stage listSortingWindow = new Stage();
         listSortingWindow.setTitle("Sort and List");
 
-        VBox sortingCriteria = new VBox(20);
-        sortingCriteria.setPadding(new Insets(20));
+        VBox sortingCriteria = new VBox(10);
+        sortingCriteria.setPadding(new Insets(5));
 
         ToggleGroup columnCategoryToggleGroup = new ToggleGroup();
         RadioButton nameButton = new RadioButton("Name");
@@ -405,7 +406,7 @@ public class FinanceController {
         monthsStringCheckComboBox.setTitle("MONTHS");
         monthsStringCheckComboBox.getCheckModel().check(LocalDate.now().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase());
 
-        Button listButton = new Button("List");
+        Button listButton = new Button("Save");
         Button cancelButton = new Button("Cancel");
 
         cancelButton.setOnAction(e-> listSortingWindow.close());
@@ -459,24 +460,30 @@ public class FinanceController {
 
             } catch (Exception listingException) {
                 view.showErrorPopup("PROBLEM SORTING THE LIST");
-                System.out.println("Problem sorting the list: " + listingException.getMessage() + " EXCEPTION: " + listingException.getClass());
+                System.out.println("Problem sorting the list: " + listingException.getMessage() + ". EXCEPTION: " + listingException.getClass());
+                listingException.printStackTrace();
             }
-
         });
 
         HBox categoryBox = new HBox(10);
-        categoryBox.setPadding(new Insets(20));
+        categoryBox.setPadding(new Insets(5));
         HBox orderBox = new HBox(10);
-        orderBox.setPadding(new Insets(20));
+        orderBox.setPadding(new Insets(5));
         categoryBox.getChildren().addAll(nameButton, valueButton, categoryButton, dateButton, noColumnButton);
         orderBox.getChildren().addAll(ascButton, descButton);
 
+        Text labelText = new Text("Choose sorting order:");
+        labelText.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
         sortingCriteria.getChildren().addAll(
+                labelText,
                 categoryBox,
                 orderBox,
-                monthsStringCheckComboBox,
+                new Label(""),
+                new Label(""),
+                new Label(""),
                 yearsCheckComboBox,
-                new HBox(10, listButton, cancelButton));
+                monthsStringCheckComboBox,
+                new HBox(10, listButton, new Label(""), new Label(""),  cancelButton));
         Scene choiceScene = new Scene(sortingCriteria, 400, 300);
         listSortingWindow.setScene(choiceScene);
         listSortingWindow.initModality(Modality.APPLICATION_MODAL);
@@ -516,12 +523,15 @@ public class FinanceController {
         try {
             //UPDATE MAIN METADATA
             if (!limitedTableSelection) {
-                view.updateMetadataGrid(monthlyCategoriesValues, yearlySumByCategory, defaultCategories, thisYearSum, thisMonthSum, MONTH_OR_PERIOD.MONTH);
+                view.updateMetadataGrid(monthlyCategoriesValues, yearlySumByCategory, defaultCategories, thisYearSum,
+                        thisMonthSum, MONTH_OR_PERIOD.MONTH);
             } else {
-                view.updateMetadataGrid(monthlyCategoriesValues, null, defaultCategories, 0, thisMonthSum, MONTH_OR_PERIOD.PERIOD);
+                view.updateMetadataGrid(monthlyCategoriesValues, null, defaultCategories, 0,
+                        thisMonthSum, MONTH_OR_PERIOD.PERIOD);
             }
             //UPDATE SCROLLABLE METADATA
-            view.updateScrollableMetadata(entriesByMonthCurrentYear, financeDAO.getSumForYearPerMonth(LocalDate.now().getYear()), yearlySumByCategory);
+            view.updateScrollableMetadata(entriesByMonthCurrentYear, financeDAO.getSumForYearPerMonth(LocalDate.now().getYear()),
+                    yearlySumByCategory); //MAYBE HERE
             //UPDATE PIE CHART
             view.updatePieChart(monthlyCategoriesValues);
             //UPDATE BAR CHART
@@ -547,7 +557,7 @@ public class FinanceController {
     private void updateLimitedLocalMapsAndValues(int[] monthNumbers, int[] yearsNumbers) {
         try {
 //            entriesByMonthCurrentYear = financeDAO.getYearlySumByMonthAndCategory(yearsNumbers); ???
-            yearlySumByCategory = null;
+//            yearlySumByCategory = null;
             monthlyCategoriesValues = financeDAO.getValuesPerCategoryForChosenYear(monthNumbers, yearsNumbers);
 
             thisYearSum = 0;
