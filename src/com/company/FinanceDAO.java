@@ -15,8 +15,10 @@ import java.util.stream.Stream;
 public class FinanceDAO {
 
     private final Connection conn;
-    private final String oldTableName = "actualFinance";
-    private final String tableName = "testFinance";
+//    private final String oldTableName = "actualFinance";
+//    private final String tableName = "testFinance";
+private final String oldTableName = "testFinance";
+    private final String tableName = "actualFinance";
     private final String createStatement = "CREATE TABLE actualFinance (\n" +
             "        id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
             "        value INTEGER NOT NULL,\n" +

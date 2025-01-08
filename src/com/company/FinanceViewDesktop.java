@@ -57,7 +57,7 @@ public class FinanceViewDesktop implements FinanceView {
     public FinanceViewDesktop(Stage primaryStage) {
         initializeUI();
 
-        Scene scene = new Scene(root, 927, 450); //was 800 width
+        Scene scene = new Scene(root, 927, 450); //was 927 width
         primaryStage.setScene(scene);
         primaryStage.setTitle("Finance Tracker");
     }
@@ -97,7 +97,7 @@ public class FinanceViewDesktop implements FinanceView {
         VBox metaDataVBox = new VBox(10);
         metaDataVBox.setPadding(new Insets(5));
         metaDataVBox.setSpacing(5);
-        metaDataVBox.setPrefWidth(267); //was 280, 600 to fit 2 columns (380 is enough for 2 columns)
+        metaDataVBox.setPrefWidth(280); //was 280(267), 600 to fit 2 columns (380 is enough for 2 columns)
         metaDataVBox.setAlignment(Pos.TOP_CENTER);
 
         Label metadataLabel = new Label("METADATA");
@@ -245,15 +245,27 @@ public class FinanceViewDesktop implements FinanceView {
         tableView.getColumns().addAll(nameColumn, valueColumn, categoryColumn, dateColumn, descriptionColumn);
         tableView.widthProperty().addListener((obs, oldWidth, newWidth) -> {
             double totalWidth = newWidth.doubleValue();
-            this.tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
-            this.tableView.setPrefWidth(660); //660
-            //647
-            nameColumn.setPrefWidth(121); //108
-            valueColumn.setPrefWidth(51); //50-51
-            categoryColumn.setPrefWidth(172); //171.8
-            dateColumn.setPrefWidth(79); //79.2
-            descriptionColumn.setPrefWidth(237); //237.6
+            this.tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+            nameColumn.setPrefWidth(totalWidth * 0.20); // ~18% of table width
+            valueColumn.setPrefWidth(totalWidth * 0.08); // ~8%
+            categoryColumn.setPrefWidth(totalWidth * 0.26); // ~26%
+            dateColumn.setPrefWidth(totalWidth * 0.12); // ~12%
+            descriptionColumn.setPrefWidth(totalWidth * 0.34); // ~36%
         });
+//        tableView.widthProperty().addListener((obs, oldWidth, newWidth) -> {
+//            double totalWidth = newWidth.doubleValue();
+//            this.tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
+//            this.tableView.setPrefWidth(660); //660
+//            //647
+//            nameColumn.setPrefWidth(121); //108
+//            valueColumn.setPrefWidth(51); //50-51
+//            categoryColumn.setPrefWidth(172); //171.8
+//            dateColumn.setPrefWidth(79); //79.2
+//            descriptionColumn.setPrefWidth(237); //237.6
+//        });
+
+
     }
 
     public BorderPane getRoot() {
@@ -630,7 +642,7 @@ public class FinanceViewDesktop implements FinanceView {
             yearlyValueFour = "$" + yearlyValuesPassed.get(chosenCategories.get(3));
         }
 
-        String metadataGridOneLabel = "SPENT THIS MONTH TOTAL:        ";
+        String metadataGridOneLabel = "SPENT THIS MONTH TOTAL:       ";
         String metadataGridTwoLabel = "SPENT THIS YEAR TOTAL:            ";
 
         if(monthOrPeriod == monthOrPeriod.PERIOD) {
@@ -640,11 +652,11 @@ public class FinanceViewDesktop implements FinanceView {
 
         metadataGridOne.add(new Label(metadataGridOneLabel), 0, 0);
         metadataGridOne.add(new TextField(monthlySumString) {{
-            setPrefWidth(50);
+            setPrefWidth(65);
             setEditable(false);
             setFocusTraversable(false);
             setAlignment(Pos.CENTER);
-        }}, 1, 0);
+        }}, 1, 0); //changed prefwidth to 65
         metadataGridOne.add(new Label(chosenCategories.get(0)), 0, 1);
         metadataGridOne.add(new TextField(monthlyValueOne) {{
             setPrefWidth(50);
@@ -677,7 +689,7 @@ public class FinanceViewDesktop implements FinanceView {
         if (monthOrPeriod != MONTH_OR_PERIOD.PERIOD) {
             metadataGridTwo.add(new Label(metadataGridTwoLabel), 0, 0);
             metadataGridTwo.add(new TextField(yearlySumString) {{
-                setPrefWidth(50);
+                setPrefWidth(65);
                 setEditable(false);
                 setFocusTraversable(false);
                 setAlignment(Pos.CENTER);
