@@ -9,6 +9,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.*;
@@ -25,6 +26,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage primaryStage) {
         //USING DATABASEUTIL VIA INSTANCE DEFEATS THE PURPOSE OF UTILITY CLASS
+        System.out.println("DPI " + Screen.getPrimary().getDpi());
         DatabaseUtil databaseUtil = new DatabaseUtil("jdbc:sqlite:C:\\Users\\Admin\\SQLite databases\\ProperTestDB.db");
         Connection conn = databaseUtil.getConnection();
         FinanceDAO financeDAO = new FinanceDAO(conn);

@@ -18,7 +18,9 @@ public class FinanceDAO {
 //    private final String oldTableName = "actualFinance";
 //    private final String tableName = "testFinance";
 private final String oldTableName = "testFinance";
-    private final String tableName = "actualFinance";
+    private final String myTableName = "actualFinance";
+    private final String LIZLIZLIZ = "actualFinanceLiz";
+    private final String tableName = "actualFinanceLiz";
     private final String createStatement = "CREATE TABLE actualFinance (\n" +
             "        id INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
             "        value INTEGER NOT NULL,\n" +

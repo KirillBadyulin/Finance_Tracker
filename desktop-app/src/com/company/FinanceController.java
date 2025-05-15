@@ -49,6 +49,7 @@ public class FinanceController {
         currentMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
         currentMonthInteger = LocalDate.now().getMonthValue();
         currentYear = LocalDate.now().getYear();
+//        currentYear = 2024;
         monthsButtons = view.getMonthsButtons();//IS IT IN CORRECT TURN, AFTER CREATING THAT CHART AND SCROLLABLE METADATA?
 
 
