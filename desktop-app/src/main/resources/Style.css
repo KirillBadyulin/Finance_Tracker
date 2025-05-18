@@ -1,0 +1,25 @@
+/* style.css */
+
+.root {
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI";
+}
+
+.table-view {
+    -fx-font-size: 13px;
+}
+
+.label {
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI";
+}
+
+.text-field {
+    -fx-font-size: 13px;
+    -fx-font-family: "Segoe UI";
+}
+
+.button {
+    -fx-font-size: 13px;
+
+}

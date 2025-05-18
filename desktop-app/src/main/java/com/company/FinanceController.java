@@ -1,12 +1,14 @@
 package com.company;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
@@ -42,8 +44,15 @@ public class FinanceController {
 
     boolean limitedTableSelection = false;
 
+    private double globalScreenWidth;
+    private double globalScreenHeight;
+
 
     public FinanceController(FinanceDAO financeDAO, FinanceViewDesktop view) {
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        globalScreenWidth = screenBounds.getWidth();
+        globalScreenHeight = screenBounds.getHeight();
+
         this.financeDAO = financeDAO;
         this.view = view;
         currentMonth = LocalDate.now().getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH).toUpperCase();
@@ -209,7 +218,7 @@ public class FinanceController {
                 new HBox(10, saveButton, cancelButton)
         );
 
-        Scene ActionScene = new Scene(listOfFields, 400, 400);
+        Scene ActionScene = new Scene(listOfFields, globalScreenWidth * 0.25, globalScreenHeight * 0.44);
         creationWindow.setScene(ActionScene);
         creationWindow.initModality(Modality.APPLICATION_MODAL);
         creationWindow.showAndWait();
@@ -485,7 +494,7 @@ public class FinanceController {
                 yearsCheckComboBox,
                 monthsStringCheckComboBox,
                 new HBox(10, listButton, new Label(""), new Label(""),  cancelButton));
-        Scene choiceScene = new Scene(sortingCriteria, 400, 300);
+        Scene choiceScene = new Scene(sortingCriteria, globalScreenWidth * 0.25, globalScreenHeight * 0.33);
         listSortingWindow.setScene(choiceScene);
         listSortingWindow.initModality(Modality.APPLICATION_MODAL);
         listSortingWindow.showAndWait();

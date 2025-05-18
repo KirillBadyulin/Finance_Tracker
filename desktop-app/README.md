@@ -16,7 +16,16 @@ MAKE SURE Java version on your PC is the same as Maven and JavaFX. Restarting PC
 Now you can run your program in BASH (from you project folder) using "mvn clean javvafx:run" or "mvn  javafx:run", OR in intelliJ, but from Maven tab-project_name> plugins-> javafx:run
    
 
-
+2. GUI (Graphic User Interface) values:
+	globalScreenWidth * 0.00, globalScreenHeight * 0.00
+1. FinanceViewDesktop: Line 60. Scene. 927 by 450 ---> 0.58 x 0.5
+2. FinanceController: Line 221 ActionScene. 400 by 400 ---> 0.25 x 0.44
+3. FinanceViewDesktop: Line 791. mainLayout. 450 by 350 ---> 0.28 x 0.39
+4. FinanceController: Line 497. choiceScene. 400 by 300 ---> 0.25 x 0.33
+5. FinanceViewDesktop: Line 872 popupScene. 300 by 200 ---> 0.19 x 0.22
+6. FinanceViewDesktop: Line 156 popupScene #2. 1200 by 600. --->0.75 x 0.67
+7.
+8.
 
 
 

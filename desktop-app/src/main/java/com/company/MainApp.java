@@ -27,7 +27,10 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         //USING DATABASEUTIL VIA INSTANCE DEFEATS THE PURPOSE OF UTILITY CLASS
         System.out.println("DPI " + Screen.getPrimary().getDpi());
-        DatabaseUtil databaseUtil = new DatabaseUtil("jdbc:sqlite:C:\\Users\\Admin\\SQLite databases\\ProperTestDB.db");
+        //CHANGED NAME OF USER!!!
+//        DatabaseUtil databaseUtil = new DatabaseUtil("jdbc:sqlite:C:\\Users\\Admin\\SQLite databases\\ProperTestDB.db");
+        DatabaseUtil databaseUtil = new DatabaseUtil("jdbc:sqlite:C:\\Users\\Kiril\\SQLite databases\\ProperTestDB.db");
+        //CHANGED NAME OF USER!!!
         Connection conn = databaseUtil.getConnection();
         FinanceDAO financeDAO = new FinanceDAO(conn);
         FinanceViewDesktop view = new FinanceViewDesktop(primaryStage);

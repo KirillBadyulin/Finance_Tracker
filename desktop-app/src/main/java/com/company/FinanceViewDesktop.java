@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
@@ -21,6 +22,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.CheckComboBox;
@@ -53,11 +55,19 @@ public class FinanceViewDesktop implements FinanceView {
     private Button cogButton;
     private CheckComboBox<String> metadataCategoriesCheckComboBox;
     private Text pieAndBarDateText;
+    private double globalScreenWidth;
+    private double globalScreenHeight;
 
     public FinanceViewDesktop(Stage primaryStage) {
         initializeUI();
 
-        Scene scene = new Scene(root, 927, 450); //was 927 width
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        globalScreenWidth = screenBounds.getWidth();
+        globalScreenHeight = screenBounds.getHeight();
+
+        Scene scene = new Scene(root, globalScreenWidth * 0.58, globalScreenHeight * 0.5);
+//        Scene scene = new Scene(root, 927, 450); //was 927 width
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.setTitle("Finance Tracker");
     }
@@ -106,7 +116,7 @@ public class FinanceViewDesktop implements FinanceView {
         cogButton = new Button();
         int buttonSize = 25;
         int imageSize = 25;
-        ImageView imageView = new ImageView(new Image("file:C:/Users/Admin/SQLite databases/gear.png"));
+        ImageView imageView = new ImageView(new Image("file:C:/Users/Kiril/SQLite databases/gear.png"));
         imageView.setFitWidth(imageSize); //WAS GOOD WITH SIZE 15
         imageView.setFitHeight(imageSize); //WAS GOOD WITH SIZE 15
         cogButton.setPrefWidth(buttonSize);
@@ -144,7 +154,8 @@ public class FinanceViewDesktop implements FinanceView {
             layout.setRight(scrollableMetadata); //INITIALIZED IN THE BEGINNING OF METHOD
 
 
-            Scene popupScene = new Scene(layout, 1200, 600);  //PIE CHART AND GRAPH SIZE (was 800 instead of 1200)
+            Scene popupScene = new Scene(layout, globalScreenWidth * 0.75, globalScreenHeight * 0.67);
+            popupScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
             popupStage.setScene(popupScene);
             popupStage.initOwner(chartsAndDetailsButton.getScene().getWindow());
             popupStage.show();
@@ -169,6 +180,7 @@ public class FinanceViewDesktop implements FinanceView {
         tableView = new TableView<>();
         initializeTableView(tableView);
         initializeTableColumns();
+
 
         // Add TableView to the center
         root.setCenter(tableView);
@@ -779,7 +791,7 @@ public class FinanceViewDesktop implements FinanceView {
         mainLayout.setPadding(new Insets(10));
         mainLayout.setAlignment(Pos.CENTER);
 
-        Scene scene = new Scene(mainLayout, 450, 350); // Adjust window size
+        Scene scene = new Scene(mainLayout, globalScreenWidth * 0.28,globalScreenHeight * 0.39); // Adjust window size
         popupStage.setScene(scene);
         popupStage.initModality(Modality.APPLICATION_MODAL); // Block interaction with other windows
         popupStage.showAndWait();
@@ -860,7 +872,7 @@ public class FinanceViewDesktop implements FinanceView {
         popupContent.setPadding(new Insets(20));
         popupContent.setAlignment(Pos.CENTER);
 
-        Scene popupScene = new Scene(popupContent, 300, 200);
+        Scene popupScene = new Scene(popupContent, globalScreenWidth * 0.19, globalScreenHeight * 0.22);
         popupStage.setScene(popupScene);
 
         popupStage.showAndWait();
